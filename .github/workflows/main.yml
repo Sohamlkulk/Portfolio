@@ -1,0 +1,34 @@
+# .github/workflows/deploy-portfolio.yml
+name: Deploy React App to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # This workflow runs when you push to the 'main' branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest # Run on a fresh Ubuntu environment
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4 # Action to checkout your repository code
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18' # Specify the Node.js version to use (e.g., '18', '20')
+
+      - name: Install dependencies
+        run: npm install # Install all project dependencies
+
+      - name: Build React application
+        run: npm run build # Run the build script defined in your package.json
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3 # A popular action for deploying to gh-pages
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }} # Automatically provided token for authentication
+          publish_dir: ./build # The directory containing your built static files
+          # If your GitHub Pages is served from a subfolder, you might need to adjust this
+          # cname: example.com # Uncomment and replace with your custom domain if you have one
